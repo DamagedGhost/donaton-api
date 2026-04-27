@@ -5,6 +5,7 @@ const helmet = require('helmet');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const { createProxyMiddleware } = require('http-proxy-middleware');
+const verifyToken = require('./middlewares/verifyToken');
 
 const app = express();
 
@@ -12,6 +13,12 @@ const app = express();
 app.use(helmet()); // Oculta cabeceras sensibles y previene inyecciones comunes
 app.use(cors()); // Permite peticiones desde el frontend
 app.use(logger('dev'));
+
+// Proteger la ruta de terreno con el middleware
+app.use('/api/terreno', verifyToken, createProxyMiddleware({ 
+    target: process.env.TERRENO_SERVICE_URL, 
+    changeOrigin: true 
+}));
 
 // Limitador de peticiones (Rate Limiting)
 const limiter = rateLimit({
