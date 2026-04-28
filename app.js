@@ -9,7 +9,8 @@ const verifyToken = require('./middlewares/verifyToken');
 
 const app = express();
 
-// 1. Capas de Seguridad y Programación Defensiva
+
+// Capas de Seguridad Iniciales (Siempre van primero)
 app.use(helmet()); 
 app.use(cors()); 
 app.use(logger('dev'));
@@ -21,16 +22,7 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-// 2. Middlewares para parsear el body 
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-
-// 3. Rutas Propias del API Gateway (Ej: Autenticación)
-app.post('/api/auth/login', (req, res) => {
-  res.json({ message: "Endpoint de login preparado" });
-});
-
-// 4. Enrutamiento (Proxy) hacia los Microservicios
+// Enrutamiento a Microservicios  
 app.use('/api/donaciones', createProxyMiddleware({ 
     target: process.env.DONACIONES_SERVICE_URL, 
     changeOrigin: true 
@@ -41,13 +33,25 @@ app.use('/api/logistica', createProxyMiddleware({
     changeOrigin: true 
 }));
 
-// Ruta protegida de terreno (Ubicada junto a los demás proxies)
 app.use('/api/terreno', verifyToken, createProxyMiddleware({ 
     target: process.env.TERRENO_SERVICE_URL, 
     changeOrigin: true 
 }));
 
-// 5. Manejo de Errores 
+
+// Middlewares 
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+
+// Rutas Propias del API Gateway
+
+app.post('/api/auth/login', (req, res) => {
+  res.json({ message: "Endpoint de login preparado" });
+});
+
+
+// Manejo de Errores 
 app.use(function(req, res, next) {
   res.status(404).json({ error: 'Ruta no encontrada en el API Gateway' });
 });
