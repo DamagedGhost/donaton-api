@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const express = require('express');
 const logger = require('morgan');
@@ -47,7 +48,18 @@ app.use(express.urlencoded({ extended: false }));
 // Rutas Propias del API Gateway
 
 app.post('/api/auth/login', (req, res) => {
-  res.json({ message: "Endpoint de login preparado" });
+  // Simulamos que leemos el body (en la vida real, esto iría a una BD)
+  const { usuario, password } = req.body;
+
+  if (usuario === 'admin' && password === 'admin123') {
+    // ¡Credenciales correctas! Fabricamos el token
+    const payload = { usuario: 'admin', rol: 'coordinador' };
+    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+    
+    res.json({ message: "Login exitoso", token: token });
+  } else {
+    res.status(401).json({ error: 'Credenciales inválidas' });
+  }
 });
 
 
