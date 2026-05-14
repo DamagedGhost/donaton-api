@@ -18,6 +18,13 @@ El diseño de este componente responde a las exigencias de la evaluación median
 * **Proxy:** http-proxy-middleware
 * **Seguridad:** jsonwebtoken, helmet, cors, express-rate-limit
 
+| Método | Ruta | Acción | Seguridad |
+| :--- | :--- | :--- | :--- |
+| **POST** | `/api/auth/login` | Autenticación de usuario y generación de JWT. | Pública |
+| **ANY** | `/api/donaciones/*` | Derivación al Microservicio de Donaciones. | Pública |
+| **ANY** | `/api/logistica/*` | Derivación al Microservicio de Logística. | Pública |
+| **ANY** | `/api/terreno/*` | Derivación al Microservicio de Terreno. | **Requiere Token JWT** |
+
 ##  Instalación y Uso
 
 1. **Clonar el repositorio**
