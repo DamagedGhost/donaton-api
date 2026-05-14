@@ -18,6 +18,9 @@ El diseño de este componente responde a las exigencias de la evaluación median
 * **Proxy:** http-proxy-middleware
 * **Seguridad:** jsonwebtoken, helmet, cors, express-rate-limit
 
+## Endpoints del API Gateway (Punto de Entrada)
+El Gateway centraliza el acceso y distribuye las peticiones de la siguiente manera:
+
 | Método | Ruta | Acción | Seguridad |
 | :--- | :--- | :--- | :--- |
 | **POST** | `/api/auth/login` | Autenticación de usuario y generación de JWT. | Pública |
