@@ -56,3 +56,9 @@ El Gateway centraliza el acceso y distribuye las peticiones de la siguiente mane
     npm start
 
 **Nota de Calidad:** Los reportes de cobertura certifican que tanto el middleware de autenticación JWT como los endpoints de proxy derivan el tráfico de manera segura y validada hacia los microservicios correspondientes, previniendo accesos no autorizados.
+
+## Repositorios relacionados
+- [Frontend de Donaton](https://github.com/diegoparra-git/Proyecto-Donaton-Front)
+- [Microservicio de Donaciones](https://github.com/diegoparra-git/donaton-donaciones)
+- [Microservicio de Logistica](https://github.com/StevenQR21/donaton-logistica)
+- [Microservicio de Terreno](https://github.com/DamagedGhost/donaton-terreno)
