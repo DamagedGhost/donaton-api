@@ -29,7 +29,7 @@ app.use('/api/donaciones', createProxyMiddleware({
     changeOrigin: true 
 }));
 
-app.use('/api/logistica', createProxyMiddleware({ 
+app.use('/api/logistica', verifyToken, createProxyMiddleware({ 
     target: process.env.LOGISTICA_SERVICE_URL, 
     changeOrigin: true 
 }));
