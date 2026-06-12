@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
@@ -18,5 +20,10 @@
     "http-proxy-middleware": "^3.0.5",
     "jsonwebtoken": "^9.0.3",
     "morgan": "~1.9.1"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^4.1.8",
+    "supertest": "^7.2.2",
+    "vitest": "^4.1.8"
   }
 }
