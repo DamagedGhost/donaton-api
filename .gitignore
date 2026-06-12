@@ -22,3 +22,6 @@ Editor directories and files
 *.njsproj
 *.sln
 *.sw?
+
+# Testing
+coverage/
