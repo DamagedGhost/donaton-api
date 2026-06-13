@@ -1,0 +1,9 @@
+node_modules
+.git
+.gitignore
+npm-debug.log
+Dockerfile
+README.md
+# Solo para demostración, se inyectan variables de entorno en tiempo de ejecución
+# .env
+# .env.*
