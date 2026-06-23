@@ -1,0 +1,177 @@
+openapi: 3.0.0
+info:
+  title: API Donatón - Arquitectura de Microservicios
+  description: Documentación centralizada (API Gateway) protegida por JWT.
+  version: 1.0.0
+servers:
+  - url: /
+    description: API Gateway (Servidor Actual)
+
+# Configuración del candado (JWT)
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+# Exigir token por defecto en todas las rutas
+security:
+  - bearerAuth: []
+
+paths:
+  /api/auth/login:
+    post:
+      summary: Autenticación de usuario (Login)
+      description: Ingresa con 'admin' y 'admin123' para generar el token JWT. Cópialo y pégalo en el botón 'Authorize' de arriba.
+      security: [] 
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              usuario: "admin"
+              password: "admin123"
+      responses:
+        '200':
+          description: Login exitoso
+          content:
+            application/json:
+              example:
+                message: "Login exitoso"
+                token: "eyJhbGciOiJIUzI1NiIsInR..."
+        '401':
+          description: Credenciales inválidas
+
+  /api/donaciones:
+    get:
+      summary: Listar todas las donaciones
+      security: []
+      responses:
+        '200':
+          description: Lista obtenida
+          content:
+            application/json:
+              example:
+                - id: 1
+                  tipoDonante: "Empresarial"
+                  nombreDonante: "Supermercados Unimarc"
+                  recurso: "Agua embotellada"
+                  cantidad: 500
+                  unidadMedida: "Litros"
+                  estado: "Recibido en Acopio"
+        '401':
+          description: No autorizado
+
+    post:
+      summary: Registrar nueva donación
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              tipoDonante: "Empresarial"
+              nombreDonante: "Supermercados Unimarc"
+              recurso: "Agua embotellada"
+              cantidad: 500
+              unidadMedida: "Litros"
+              estado: "Recibido en Acopio"
+      responses:
+        '201':
+          description: Donación registrada
+        '400':
+          description: Bad Request
+        '401':
+          description: No autorizado
+
+  /api/logistica:
+    get:
+      summary: Obtener Inventario de Logística
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Operación exitosa
+          content:
+            application/json:
+              example:
+                - id: 1
+                  item: "Cajas de Alimento"
+                  cantidad: 50
+                  centro_acopio: "Bodega Central Santiago"
+                  estado: "Disponible"
+        '401':
+          description: No autorizado (Falta token JWT o es inválido)
+
+    post:
+      summary: Crear Registro de Entrada (Logística)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              item: "Cajas de Alimento"
+              cantidad: 50
+              centro_acopio: "Bodega Central Santiago"
+              estado: "Disponible"
+      responses:
+        '201':
+          description: Recurso creado exitosamente
+        '400':
+          description: Bad Request (Faltan campos obligatorios)
+        '401':
+          description: No autorizado
+
+  /api/terreno:
+    get:
+      summary: Obtener Reportes de Terreno
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Reportes obtenidos
+          content:
+            application/json:
+              example:
+                - _id: "69f9450fe95a8d320e3028c6"
+                  sede: "Sede de prueba"
+                  tipo: "necesidad"
+                  descripcion: "Este es un reporte de prueba"
+                  items: 
+                    - nombre: "Elemento de prueba"
+                      cantidad: 1
+                      urgencia: "media"
+                      _id: "69f9450fe95a8d320e3028c6"
+                  estado: "pendiente"
+                  creadoPor: "voluntario_prueba"
+        '401':
+          description: No autorizado
+
+    post:
+      summary: Crear Reporte de Terreno
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              sede: "Sede de prueba"
+              tipo: "necesidad"
+              descripcion: "Este es un reporte de prueba"
+              items: 
+                - nombre: "Elemento de prueba"
+                  cantidad: 1
+                  urgencia: "media"
+              estado: "pendiente"
+              creadoPor: "voluntario_prueba"
+      responses:
+        '201':
+          description: Reporte guardado
+        '400':
+          description: Bad Request
+        '401':
+          description: No autorizado

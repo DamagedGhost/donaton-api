@@ -7,12 +7,18 @@ const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const verifyToken = require('./middlewares/verifyToken');
-
 const app = express();
 
+const path = require('path');
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
+
+const swaggerDocument = YAML.load('./swagger.yaml')
 
 // Capas de Seguridad Iniciales (Siempre van primero)
-app.use(helmet()); 
+app.use(helmet({
+  contentSecurityPolicy: false,
+}));
 app.use(cors()); 
 app.use(logger('dev'));
 
@@ -23,11 +29,12 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-// Enrutamiento a Microservicios  
+
 app.use('/api/donaciones', createProxyMiddleware({ 
     target: process.env.DONACIONES_SERVICE_URL, 
     changeOrigin: true 
 }));
+
 
 app.use('/api/logistica', verifyToken, createProxyMiddleware({ 
     target: process.env.LOGISTICA_SERVICE_URL, 
@@ -40,6 +47,7 @@ app.use('/api/terreno', verifyToken, createProxyMiddleware({
 }));
 
 
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 // Middlewares 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
