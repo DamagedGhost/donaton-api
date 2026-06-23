@@ -21,7 +21,8 @@
     "jsonwebtoken": "^9.0.3",
     "morgan": "~1.9.1",
     "swagger-jsdoc": "^6.3.0",
-    "swagger-ui-express": "^5.0.1"
+    "swagger-ui-express": "^5.0.1",
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "@vitest/coverage-v8": "^4.1.8",

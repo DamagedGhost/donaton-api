@@ -9,14 +9,16 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 const verifyToken = require('./middlewares/verifyToken');
 const app = express();
 
-// doc swagger.js
+const path = require('path');
 const swaggerUi = require('swagger-ui-express');
-const swaggerSpec = require('./config/swagger');
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+const YAML = require('yamljs');
 
+const swaggerDocument = YAML.load('./swagger.yaml')
 
 // Capas de Seguridad Iniciales (Siempre van primero)
-app.use(helmet()); 
+app.use(helmet({
+  contentSecurityPolicy: false,
+}));
 app.use(cors()); 
 app.use(logger('dev'));
 
@@ -27,19 +29,7 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-// por si acaso
-const targetUrl = process.env.URL_DESTINO || 'http://localhost:8080';
 
-// Enrutamiento a Microservicios  
-/**
- * @swagger /api/donaciones:
- *   get:
- *     summary: Obtiene una lista de donaciones
- *    responses:
- *     '200':
- *      description: Lista de donaciones obtenida exitosamente
- * 
- */
 app.use('/api/donaciones', createProxyMiddleware({ 
     target: process.env.DONACIONES_SERVICE_URL, 
     changeOrigin: true 
@@ -57,6 +47,7 @@ app.use('/api/terreno', verifyToken, createProxyMiddleware({
 }));
 
 
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 // Middlewares 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

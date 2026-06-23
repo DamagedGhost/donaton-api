@@ -17,6 +17,7 @@ COPY routes ./routes
 COPY public ./public
 COPY views ./views
 COPY .env ./
+COPY swagger.yaml ./
 
 EXPOSE 3000
 
